@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Giphy Fun</title>
+
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style type="text/css">
+        button,
+        div,
+        form,
+        input {
+            margin: 10px;
+        }
+    </style>
+
+</head>
+
+
+
+<body>
+
+    <!-- Rendered Buttons will get Dumped Here  -->
+    <div id="buttons-view">
+
+        <button data-search="Dog">Dog</button>
+        <button data-search="Car">Car</button>
+
+    </div>
+
+    <form id="search-form">
+        <!-- <label for="search-input">Search Here</label> -->
+        <!-- Button triggers new subject to be added -->
+
+        <button type="button" class="btn btn-primary">Enter</button>
+        <input type="text" id="search-input">
+
+        <br>
+
+    </form>
+
+
+
+    <!-- Gifs will Get Dumped Here -->
+
+    <div id="GIFArea"></div>
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <script type="text/javascript">
+
+        function displaySearch() {
+
+            var dynamicButton = $(".btn")
+
+            dynamicButton.addClass("add-search");
+            dynamicButton.attr("btn btn-primary", response.data[i]);
+            dynamicButton.text(response.data[i]);
+            $("#search-input").append(dynamicButton);
+            
+            $('.btn').on('click', function () {
+                // console.log("button clicks");
+                // var x = $(this).data("#search-input");
+                var x = $("#search-input").val()
+
+                console.log(x)
+
+
+                var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + x + "&api_key=VHIw2dn9IPxGA7z7icJfFBaN9JYMRe7a&limit=10";
+                console.log(queryURL);
+
+
+                $.ajax({ url: queryURL, method: 'GET' })
+                    .done(function (response) {
+                        console.log(response);
+                        for (var i = 0; i < response.data.length; i++) {
+
+                            $('#GIFArea').prepend("<p>Rating: " + response.data[i].rating + "</p>");
+                            $('#GIFArea').prepend("<img src='" + response.data[i].images.downsized.url + "'>");
+                        }
+
+                    })
+
+
+            });
+
+
+
+
+            event.preventDefault()
+
+
+
+            displaySearch()
+            // click event listener//
+            $(document).on("click", ".add-search", displaySearch);
+
+    </script>
+
+</body>
+
+</html>
