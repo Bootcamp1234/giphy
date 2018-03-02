@@ -28,25 +28,19 @@
 <body>
 
     <!-- Rendered Buttons will get Dumped Here  -->
-    <div id="buttons-view">
+    <!-- <div id="buttons-view">
 
         <button data-search="Dog">Dog</button>
         <button data-search="Car">Car</button>
 
-    </div>
+    </div> -->
 
-    <form id="search-form">
-        <!-- <label for="search-input">Search Here</label> -->
-        <!-- Button triggers new subject to be added -->
-
-        <button type="button" class="btn btn-primary">Enter</button>
-        <input type="text" id="search-input">
-
+    <form id="animalsTypes">
+        <label for="animalTypes-input">Search an Animal</label>
+        <input type="text" id="animalTypes-input">
         <br>
-
+        <input type="submit" id="addanimalType" value="Add Animal Type">
     </form>
-
-
 
     <!-- Gifs will Get Dumped Here -->
 
@@ -54,51 +48,65 @@
     <script src="https://code.jquery.com/jquery.js"></script>
     <script type="text/javascript">
 
-        function displaySearch() {
+        // function to add dynamic button parameters//
+        function displayAnimal() {
 
-            var dynamicButton = $(".btn")
+            var dynamicButton = $("#addanimalType")
 
-            dynamicButton.addClass("add-search");
-            dynamicButton.attr("btn btn-primary", response.data[i]);
+            dynamicButton.addClass("add-animal");
+            dynamicButton.attr("#animalTypes-input", response.data[i]);
             dynamicButton.text(response.data[i]);
-            $("#search-input").append(dynamicButton);
-            
-            $('.btn').on('click', function () {
-                // console.log("button clicks");
-                // var x = $(this).data("#search-input");
-                var x = $("#search-input").val()
+            $("#animalTypes-input").append(dynamicButton);
+        }
+        // click event that adds buttons//
+        $('#addanimalType').on('click', function (event) {
+            event.preventDefault()
+            // console.log("button clicks");
+            // var x = $(this).data("#search-input");
+            var x = $("#addanimalType").val()
 
-                console.log(x)
+            console.log(x)
 
+            // location to call on the gifs to appear//
+            var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + x + "&api_key=VHIw2dn9IPxGA7z7icJfFBaN9JYMRe7a&limit=10";
+            console.log(queryURL);
+            // 
+            // gets the gifs from the above site//
+            $.ajax({ url: queryURL, method: 'GET' })
+                .done(function (response) {
+                    console.log(response);
+                    for (var i = 0; i < response.data.length; i++) {
 
-                var queryURL = "http://api.giphy.com/v1/gifs/search?q=" + x + "&api_key=VHIw2dn9IPxGA7z7icJfFBaN9JYMRe7a&limit=10";
-                console.log(queryURL);
-
-
-                $.ajax({ url: queryURL, method: 'GET' })
-                    .done(function (response) {
-                        console.log(response);
-                        for (var i = 0; i < response.data.length; i++) {
-
-                            $('#GIFArea').prepend("<p>Rating: " + response.data[i].rating + "</p>");
-                            $('#GIFArea').prepend("<img src='" + response.data[i].images.downsized.url + "'>");
+                        // adds gifs with rating above the prior search//
+                        $('#GIFArea').prepend("<p>Rating: " + response.data[i].rating + "</p>");
+                        $('#GIFArea').prepend("<img src='" + response.data[i].images.downsized.url + "'>");
+                    }
+                    // on click function that starts with STILL gifs then animates gifs//
+                    $("img src=").on("click", function () {
+                        var state = $(this).attr("animalTypes-input")
+                        if (state === "active") {
+                         
+                            $(this).attr("src", response.data[$(this).attr("animalTypes-input")].images.fixed_height_still.url)
+                            $(this).attr("state", "still")
+                            
                         }
-
+                        else {
+                           
+                            $(this).attr("src", response.data[$(this).attr("animalTypes-input")].images.fixed_height.url)
+                            $(this).attr("state", "active")
+                            
+                        }
                     })
 
-
-            });
-
+                })
 
 
-
-            event.preventDefault()
-
+        });
 
 
-            displaySearch()
-            // click event listener//
-            $(document).on("click", ".add-search", displaySearch);
+        displaySearch()
+        // click event listener//
+        $(document).on("click", "#addanimalType", displayAnimal);
 
     </script>
 
